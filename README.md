@@ -1,4 +1,4 @@
-# Docker stack for Project REDCap
+# Docker image for Project REDCap developers
 
 ## About
 
