@@ -64,7 +64,7 @@ networks:
 
 :memo: Before you will be able to open your web page for the first time you will need to create a database. You can do this either by navigating to the install page a `http://localhost/install.php` or you can auto create the database with `http://localhost/install.php?sql=1&auto=1`
 
-## Environment variables
+### Environment variables
 
 * `REDCAP_DB_HOST`: Hostname for the database server. Use the service name if specified in a stack.
 * `REDCAP_DB_USER`: Database username on `REDCAP_DB_HOST`.
@@ -72,6 +72,10 @@ networks:
 * `REDCAP_DB_NAME`: The database name to use. It will be auto created if it doesn't exist.
 * `REDCAP_DEBUG`: If this environment varaible exists then REDCap will run in debug mode.
 * `MAILHOG_HOST`: If you want your outgoing e-mails to be captured then specify the `MAILHOG_HOST` host/service name.
+
+### Volumes
+
+Map the location of your redcap folder to `/var/www/html` inside the container.
 
 ## Disclaimer
 
