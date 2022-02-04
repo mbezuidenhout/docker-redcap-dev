@@ -23,6 +23,36 @@ file_env() {
     unset "$fileVar"
 }
 
+if [[ "$1" == apache2* ]]; then
+    hostname="${SERVER_HOSTNAME:-localhost}"
+    : ${HTTPS_ENABLED:=true}
+    if [[ $HTTPS_ENABLED == "true" ]]; then
+        if [ ! -e /etc/apache2/ssl/${hostname}.crt ] || [ ! -e /etc/apache2/ssl/${hostname}.key ]; then
+            # if the certificates don't exist then make them
+            mkdir -p /etc/apache2/ssl
+            openssl req -days 356 -x509 -out /etc/apache2/ssl/${hostname}.crt -keyout /etc/apache2/ssl/${hostname}.key \
+                -newkey rsa:2048 -nodes -sha256 \
+                -subj '/CN='${hostname} -extensions EXT -config <( \
+            printf "[dn]\nCN=${hostname}\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:${hostname}\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+        fi
+        cat > /etc/apache2/sites-available/${hostname}-ssl.conf <<EOL
+        <IfModule mod_ssl.c>
+            <VirtualHost *:443>
+                ServerName ${hostname}
+                DocumentRoot /var/www/html
+                ErrorLog \${APACHE_LOG_DIR}/error.log
+                CustomLog \${APACHE_LOG_DIR}/access.log combined
+                SSLEngine on
+                SSLCertificateFile /etc/apache2/ssl/${hostname}.crt
+                SSLCertificateKeyFile /etc/apache2/ssl/${hostname}.key
+            </VirtualHost>
+        </IfModule>
+EOL
+        a2enmod ssl
+        a2ensite ${hostname}-ssl
+    fi
+fi
+
 if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
     if [ ! -e index.php ] && [ ! -e redcap_connect.php ]; then
         echo >&2 'REDCap does not appear to be installed. Please map the redcap folder as a docker volume.'
