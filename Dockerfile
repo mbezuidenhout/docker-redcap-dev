@@ -2,7 +2,7 @@
 # REDCap Dockerfile
 #
 
-FROM php:apache
+FROM php:8.0-apache
 LABEL maintainer="Marius Bezuidenhout <marius.bezuidenhout@gmail.com>"
 
 ENV PATH "/usr/local/bin:/usr/local/sbin:$PATH"
