@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+## TEMP File
+TFILE=`mktemp --tmpdir tfile.XXXX`
+trap "rm -f $TFILE" 0 1 2 3 15
+## trap Deletes TFILE on Exit
+
 # usage: file_env VAR [DEFAULT]
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
 # (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
@@ -85,7 +90,8 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
         : "${REDCAP_DB_NAME:=redcap}"
 
         # Ensure unix line endings
-        sed -ri -e 's/\r$//' database.php
+        sed -r -e 's/\r$//' database.php > "$TFILE"
+        cat "$TFILE" > database.php
 
         # see http://stackoverflow.com/a/2705678/433558
         sed_escape_lhs() {
@@ -111,7 +117,9 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
                 start="^(\s*)$(sed_escape_lhs "$key")\s*="
                 end=";"
             fi
-            sed -ri -e "s/($start\s*).*($end)$/\1$(sed_escape_rhs "$(php_escape "$value" "$var_type")")\3/" database.php
+            # VirtioFS on Mac OS has a problem with newly created files on a shared directory.
+            sed -r -e "s/($start\s*).*($end)$/\1$(sed_escape_rhs "$(php_escape "$value" "$var_type")")\3/" database.php > "$TFILE"
+            cat "$TFILE" > database.php 
         }
         set_config '$hostname' "$REDCAP_DB_HOST"
         set_config '$db'       "$REDCAP_DB_NAME"
