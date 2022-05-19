@@ -15,18 +15,20 @@ fi
 
 php composer-setup.php
 rm composer-setup.php
+mv composer.phar /usr/local/bin
+chmod +x /usr/local/bin/composer.phar
 # End composer install
 
 # Golang install
 case $(uname -m) in
     i386) ;&
-    i686)   curl -Lsf 'https://golang.org/dl/go1.16.7.linux-386.tar.gz' | tar -C '/usr/local' -xvzf - ;;
-    x86_64) curl -Lsf 'https://golang.org/dl/go1.16.7.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf - ;;
+    i686)   curl -Lsf 'https://golang.org/dl/go1.17.10.linux-386.tar.gz' | tar -C '/usr/local' -xvzf - ;;
+    x86_64) curl -Lsf 'https://golang.org/dl/go1.17.10.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf - ;;
     armv6l) ;&
-    armv7l) curl -Lsf 'https://golang.org/dl/go1.16.7.linux-armv6l.tar.gz' | tar -C '/usr/local' -xvzf - ;;
-    aarch64)  curl -Lsf 'https://golang.org/dl/go1.16.7.linux-arm64.tar.gz' | tar -C '/usr/local' -xvzf - ;;
-    ppc64le)  curl -Lsf 'https://golang.org/dl/go1.16.7.linux-ppc64le.tar.gz' | tar -C '/usr/local' -xvzf - ;;
-    s390x)  curl -Lsf 'https://golang.org/dl/go1.16.7.linux-s390x.tar.gz' | tar -C '/usr/local' -xvzf - ;;
+    armv7l) curl -Lsf 'https://golang.org/dl/go1.17.10.linux-armv6l.tar.gz' | tar -C '/usr/local' -xvzf - ;;
+    aarch64)  curl -Lsf 'https://golang.org/dl/go1.17.10.linux-arm64.tar.gz' | tar -C '/usr/local' -xvzf - ;;
+    ppc64le)  curl -Lsf 'https://golang.org/dl/go1.17.10.linux-ppc64le.tar.gz' | tar -C '/usr/local' -xvzf - ;;
+    s390x)  curl -Lsf 'https://golang.org/dl/go1.17.10.linux-s390x.tar.gz' | tar -C '/usr/local' -xvzf - ;;
 esac
 # End golang insall
 
