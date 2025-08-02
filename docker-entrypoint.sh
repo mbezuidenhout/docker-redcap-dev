@@ -233,8 +233,8 @@ EOTBLCHK
     done
 fi
 
-if [ -n "${MAILHOG_HOST:-}" ]; then
-    echo "sendmail_path = \"/usr/local/bin/mhsendmail --smtp-addr=$MAILHOG_HOST:1025\"" > /usr/local/etc/php/conf.d/mailhog.ini
+if [ -n "${MAILPIT_HOST:-}" ]; then
+    echo "sendmail_path = \"/usr/sbin/sendmail -S $MAILPIT_HOST:1025 -t\"" > /usr/local/etc/php/conf.d/mailhog.ini
 fi
 
 /etc/init.d/cron start
